@@ -36,12 +36,16 @@ export function AuthPage({ onAuthSuccess, onBackClick, isSignUp }: AuthPageProps
           setLoading(false);
           return;
         }
-        const authData = await signUp(email, password);
+        await signUp(email, password);
 
-if (authData?.user) {
-  await supabase.from("profiles").insert([
+const {
+  data: { user },
+} = await supabase.auth.getUser();
+
+if (user) {
+  await supabase.from("profiles").upsert([
     {
-      id: authData.user.id,
+      id: user.id,
       username: username,
       email: email,
     },
