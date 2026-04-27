@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase';
 import { Card, CardContent, Button, Input } from '../components/UI';
 
 interface AuthPageProps {
@@ -11,6 +12,7 @@ interface AuthPageProps {
 
 export function AuthPage({ onAuthSuccess, onBackClick, isSignUp }: AuthPageProps) {
   const { signUp, signIn } = useAuth();
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -34,7 +36,17 @@ export function AuthPage({ onAuthSuccess, onBackClick, isSignUp }: AuthPageProps
           setLoading(false);
           return;
         }
-        await signUp(email, password);
+        const authData = await signUp(email, password);
+
+if (authData?.user) {
+  await supabase.from("profiles").insert([
+    {
+      id: authData.user.id,
+      username: username,
+      email: email,
+    },
+  ]);
+}
       } else {
         await signIn(email, password);
       }
@@ -67,6 +79,18 @@ export function AuthPage({ onAuthSuccess, onBackClick, isSignUp }: AuthPageProps
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
+              {isSignUp && (
+  <Input
+    type="text"
+    placeholder="Username"
+    value={username}
+    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+      setUsername(e.target.value)
+    }
+    disabled={loading}
+    required
+  />
+)}
                 <Input
                   type="email"
                   placeholder="Email address"

@@ -22,9 +22,24 @@ interface Roster {
 export function Dashboard({ onCreateRoster }: DashboardProps) {
   const { user, signOut } = useAuth();
   const [rosters, setRosters] = useState<Roster[]>([]);
+  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    fetchProfile();
+    async function fetchProfile() {
+      if (!user) return;
+    
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+    
+      if (!error && data) {
+        setProfile(data);
+      }
+    }
     fetchRosters();
   }, []);
 
@@ -53,8 +68,9 @@ export function Dashboard({ onCreateRoster }: DashboardProps) {
           <h1 className="text-3xl text-black font-bold mb-4">User Dashboard</h1>
 
           <div className="space-y-2">
-            <p><strong>Email:</strong> {user?.email}</p>
-            <p><strong>User ID:</strong> {user?.id}</p>
+          <p><strong>Username:</strong> {profile?.username || "Loading..."}</p>
+<p><strong>Email:</strong> {profile?.email || user?.email}</p>
+<p><strong>User ID:</strong> {user?.id}</p>
           </div>
 
           <div className="mt-6 flex gap-4">
