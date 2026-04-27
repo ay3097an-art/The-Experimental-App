@@ -5,7 +5,7 @@
 // 3. Created roster list for that user
 // 4. Uses Supabase table `rosters` to store user rosters
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
 
