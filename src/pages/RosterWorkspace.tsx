@@ -382,12 +382,11 @@ export function RosterWorkspace({ isGuest, onReturnHome }: RosterWorkspaceProps)
             if (isGuest || !user) return;
           
             const firstDate =
-            selectedWeek
-              ? new Date(selectedWeek).toLocaleDateString("en-GB")
-              : new Date().toLocaleDateString("en-GB");
-          
-                      const title =
-                        rosterPurpose || `${institutionName || "Duty Roster"} - Roster_${groupName || "Group"}_${placeOfDuty || "Duty Place"}_${firstDate}`
+  selectedWeek
+    ? new Date(selectedWeek).toLocaleDateString("en-GB")
+    : new Date().toLocaleDateString("en-GB");
+
+    const title = `${rosterNumber || "1"}_${rosterPurpose || "Duty"}_${groupName || "Group"}_${placeOfDuty || "DutyPlace"}_${firstDate}`;
           
               console.log("USER:", user);
               console.log("USER ID:", user?.id);
