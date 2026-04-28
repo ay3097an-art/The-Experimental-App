@@ -36,7 +36,7 @@ export function AuthPage({ onAuthSuccess, onBackClick, isSignUp }: AuthPageProps
           setLoading(false);
           return;
         }
-        await signUp(email, password);
+        await signUp(email, password, username);
 
 const {
   data: { user },
