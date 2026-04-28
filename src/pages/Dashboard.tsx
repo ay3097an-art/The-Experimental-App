@@ -28,22 +28,22 @@ export function Dashboard({ onCreateRoster, onLogout }: DashboardProps) {
 
   useEffect(() => {
     fetchProfile();
-    async function fetchProfile() {
-      if (!user) return;
-    
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .single();
-    
-      if (!error && data) {
-        setProfile(data);
-      }
-    }
     fetchRosters();
-  }, []);
-
+  }, [user]);
+  async function fetchProfile() {
+    if (!user) return;
+  
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+  
+    if (!error && data) {
+      setProfile(data);
+    }
+  }
+    
   async function fetchRosters() {
     if (!user) return;
 
@@ -107,19 +107,24 @@ export function Dashboard({ onCreateRoster, onLogout }: DashboardProps) {
             <p>No rosters created yet.</p>
           ) : (
             <div className="space-y-3">
-              {rosters.map((roster) => (
-                <div
-                  key={roster.id}
-                  className="border rounded-xl p-4"
-                >
-                  <p className="font-semibold">{roster.title}</p>
-                  <p className="text-sm text-gray-500">
-                    {new Date(roster.created_at).toLocaleString()}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
+  {rosters.map((roster, index) => (
+    <div
+      key={roster.id}
+      className="border rounded-xl p-4 flex justify-between items-center"
+    >
+      <div>
+        <p className="font-semibold">
+          {index + 1}. {roster.title}
+        </p>
+
+        <p className="text-sm text-gray-500">
+          Created: {new Date(roster.created_at).toLocaleDateString("en-GB")}
+        </p>
+      </div>
+    </div>
+  ))}
+</div>
+)}
         </div>
       </div>
     </div>

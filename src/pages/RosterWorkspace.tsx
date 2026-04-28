@@ -381,8 +381,13 @@ export function RosterWorkspace({ isGuest, onReturnHome }: RosterWorkspaceProps)
           const saveRosterToDatabase = async () => {
             if (isGuest || !user) return;
           
-            const title =
-              rosterPurpose || `${institutionName || "Duty Roster"} - Roster`;
+            const firstDate =
+            selectedWeek
+              ? new Date(selectedWeek).toLocaleDateString("en-GB")
+              : new Date().toLocaleDateString("en-GB");
+          
+                      const title =
+                        rosterPurpose || `${institutionName || "Duty Roster"} - Roster_${groupName || "Group"}_${placeOfDuty || "Duty Place"}_${firstDate}`
           
               console.log("USER:", user);
               console.log("USER ID:", user?.id);
