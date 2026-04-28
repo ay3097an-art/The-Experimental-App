@@ -11,6 +11,7 @@ import { supabase } from "../lib/supabase";
 
 interface DashboardProps {
   onCreateRoster: () => void;
+  onLogout: () => void;
 }
 
 interface Roster {
@@ -19,7 +20,7 @@ interface Roster {
   created_at: string;
 }
 
-export function Dashboard({ onCreateRoster }: DashboardProps) {
+export function Dashboard({ onCreateRoster, onLogout }: DashboardProps) {
   const { user, signOut } = useAuth();
   const [rosters, setRosters] = useState<Roster[]>([]);
   const [profile, setProfile] = useState<any>(null);
@@ -85,11 +86,14 @@ export function Dashboard({ onCreateRoster }: DashboardProps) {
             </button>
 
             <button
-              onClick={signOut}
-              className="px-6 py-3 border rounded-xl"
-            >
-              Logout
-            </button>
+  onClick={async () => {
+    await signOut();
+    onLogout();
+  }}
+  className="px-6 py-3 border rounded-xl"
+>
+  Logout
+</button>
           </div>
         </div>
 

@@ -63,8 +63,12 @@ function AppContent() {
   if (currentPage === "dashboard") {
     return (
       <Dashboard
-        onCreateRoster={() => setCurrentPage("workspace")}
-      />
+  onCreateRoster={() => setCurrentPage("workspace")}
+  onLogout={() => {
+    setCurrentPage("landing");
+    setIsGuest(false);
+  }}
+/>
     );
   }
   if (currentPage === "workspace") {
