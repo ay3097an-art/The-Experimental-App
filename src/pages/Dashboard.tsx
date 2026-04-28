@@ -68,7 +68,10 @@ export function Dashboard({ onCreateRoster }: DashboardProps) {
           <h1 className="text-3xl text-black font-bold mb-4">User Dashboard</h1>
 
           <div className="space-y-2">
-          <p><strong>Username:</strong> {profile?.username || user?.username}</p>
+          <p>
+  <strong>Username:</strong>{" "}
+  {user?.user_metadata?.username || "No Username"}
+</p>
 <p><strong>Email:</strong> {profile?.email || user?.email}</p>
 <p><strong>User ID:</strong> {user?.id}</p>
           </div>
