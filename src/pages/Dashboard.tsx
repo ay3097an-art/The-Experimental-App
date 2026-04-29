@@ -54,7 +54,7 @@ export function Dashboard({
 
     const { data, error } = await supabase
       .from("rosters")
-      .select("id, title, created_at")
+      .select("*")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
