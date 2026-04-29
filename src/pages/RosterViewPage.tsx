@@ -1,3 +1,5 @@
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import { Card, CardContent, Button } from "../components/UI";
 
 interface RosterViewPageProps {
@@ -23,6 +25,70 @@ export function RosterViewPage({
     finalRosterData.length > 0
       ? Object.keys(finalRosterData[0])
       : [];
+      const downloadSavedRosterPDF = () => {
+        const pdf = new jsPDF({
+          orientation: "landscape",
+          unit: "mm",
+          format: "letter",
+        });
+      
+        pdf.setFontSize(16);
+        pdf.text(
+          roster.institution_name || "Duty Roster",
+          pdf.internal.pageSize.getWidth() / 2,
+          15,
+          { align: "center" }
+        );
+      
+        pdf.setFontSize(11);
+        pdf.text(
+          `Roster For: ${roster.roster_purpose || "__________"}`,
+          pdf.internal.pageSize.getWidth() / 2,
+          23,
+          { align: "center" }
+        );
+      
+        pdf.text(
+          `Duty at: ${roster.place_of_duty || "__________"}`,
+          pdf.internal.pageSize.getWidth() / 2,
+          30,
+          { align: "center" }
+        );
+      
+        pdf.text(
+          `Group: ${roster.group_name || "__________"}`,
+          pdf.internal.pageSize.getWidth() / 2,
+          37,
+          { align: "center" }
+        );
+      
+        pdf.text(
+          `Roster No. ${roster.roster_number || "1"}`,
+          15,
+          44
+        );
+      
+        autoTable(pdf, {
+          head: [tableHeaders],
+          body: finalRosterData.map((row: any) =>
+            tableHeaders.map((header) => row[header] || "")
+          ),
+          startY: 52,
+          theme: "grid",
+          styles: {
+            fontSize: 8,
+            cellPadding: 2,
+            halign: "center",
+            valign: "middle",
+          },
+          margin: {
+            left: 8,
+            right: 8,
+          },
+        });
+      
+        pdf.save("saved-roster.pdf");
+      };
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -94,9 +160,12 @@ export function RosterViewPage({
                 Return to Dashboard
               </Button>
 
-              <Button variant="outline">
-                Print PDF
-              </Button>
+              <Button
+  variant="outline"
+  onClick={downloadSavedRosterPDF}
+>
+  Print PDF
+</Button>
             </div>
           </CardContent>
         </Card>
