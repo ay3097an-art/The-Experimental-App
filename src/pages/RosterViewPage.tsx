@@ -49,7 +49,7 @@ export function RosterViewPage({
 
         <Card>
           <CardContent className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="text-2xl font-bold text-black mb-4">
               Final Saved Roster
             </h2>
 
