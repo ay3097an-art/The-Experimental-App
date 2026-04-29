@@ -12,6 +12,7 @@ import { supabase } from "../lib/supabase";
 interface DashboardProps {
   onCreateRoster: () => void;
   onLogout: () => void;
+  onOpenRoster: (roster: any) => void;
 }
 
 interface Roster {
@@ -20,7 +21,11 @@ interface Roster {
   created_at: string;
 }
 
-export function Dashboard({ onCreateRoster, onLogout }: DashboardProps) {
+export function Dashboard({
+  onCreateRoster,
+  onLogout,
+  onOpenRoster,
+}: DashboardProps) {
   const { user, signOut } = useAuth();
   const [rosters, setRosters] = useState<Roster[]>([]);
   const [profile, setProfile] = useState<any>(null);
@@ -123,7 +128,8 @@ export function Dashboard({ onCreateRoster, onLogout }: DashboardProps) {
     </div>
 
     <div className="flex gap-2 flex-wrap">
-      <button className="px-4 py-2 text-black border rounded-lg">
+      <button onClick={() => onOpenRoster(roster)}
+      className="px-4 py-2 text-black border rounded-lg">
         Open
       </button>
 

@@ -1,3 +1,4 @@
+import { RosterViewPage } from "./pages/RosterViewPage";
 import { useState } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { LandingPage } from "./pages/LandingPage";
@@ -10,6 +11,7 @@ function AppContent() {
   const { user, loading } = useAuth();
   const [currentPage, setCurrentPage] = useState("landing"); // landing, signup, signin, dashboard, workspace
   const [isGuest, setIsGuest] = useState(false);
+  const [selectedRoster, setSelectedRoster] = useState<any>(null);
 
   if (loading) {
     return (
@@ -68,7 +70,22 @@ function AppContent() {
     setCurrentPage("landing");
     setIsGuest(false);
   }}
+  onOpenRoster={(roster) => {
+    setSelectedRoster(roster);
+    setCurrentPage("view-roster");
+  }}
 />
+    );
+  }
+  if (currentPage === "view-roster") {
+    return (
+      <RosterViewPage
+        roster={selectedRoster}
+        onReturnDashboard={() => {
+          setCurrentPage("dashboard");
+          setSelectedRoster(null);
+        }}
+      />
     );
   }
   if (currentPage === "workspace") {
