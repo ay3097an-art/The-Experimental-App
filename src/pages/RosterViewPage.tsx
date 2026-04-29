@@ -17,9 +17,16 @@ export function RosterViewPage({
     );
   }
 
+  const finalRosterData = roster.final_roster_data || [];
+
+  const tableHeaders =
+    finalRosterData.length > 0
+      ? Object.keys(finalRosterData[0])
+      : [];
+
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6">
 
         <Card>
           <CardContent className="p-6 space-y-4">
@@ -37,8 +44,52 @@ export function RosterViewPage({
               <strong>Created On:</strong>{" "}
               {new Date(roster.created_at).toLocaleDateString("en-GB")}
             </p>
+          </CardContent>
+        </Card>
 
-            <div className="flex gap-4 pt-4">
+        <Card>
+          <CardContent className="p-6">
+            <h2 className="text-2xl font-semibold mb-4">
+              Final Saved Roster
+            </h2>
+
+            {finalRosterData.length === 0 ? (
+              <p>No saved roster table found.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full border text-sm">
+                  <thead>
+                    <tr>
+                      {tableHeaders.map((header) => (
+                        <th
+                          key={header}
+                          className="border p-2 bg-gray-100"
+                        >
+                          {header}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {finalRosterData.map((row: any, index: number) => (
+                      <tr key={index}>
+                        {tableHeaders.map((header) => (
+                          <td
+                            key={header}
+                            className="border p-2 text-center"
+                          >
+                            {row[header]}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <div className="flex gap-4 pt-6">
               <Button onClick={onReturnDashboard}>
                 Return to Dashboard
               </Button>
