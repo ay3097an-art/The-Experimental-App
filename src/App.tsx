@@ -25,7 +25,8 @@ function AppContent() {
   if (
     user &&
     currentPage !== "dashboard" &&
-    currentPage !== "workspace"
+    currentPage !== "workspace" &&
+    currentPage !== "view-roster"
   ) {
     setCurrentPage("dashboard");
   }
