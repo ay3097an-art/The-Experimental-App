@@ -390,6 +390,26 @@ export function RosterWorkspace({ isGuest, onReturnHome }: RosterWorkspaceProps)
             console.log("USER:", user);
             console.log("USER ID:", user?.id);
           
+            const finalRosterData = (members.length === 0
+              ? [{ id: 1, name: "" }]
+              : members.map((member, index) => ({
+                  id: index + 1,
+                  name: member.name,
+                }))
+            ).map((row, rowIndex) => ({
+              sl: String(row.id),
+              name: row.name,
+              ...Object.fromEntries(
+                weekHeaders.map((day, dayIndex) => [
+                  day,
+                  String(
+                    manualRosterData[`${rowIndex}-${dayIndex}`] ??
+                      getAutoDuty(rowIndex, dayIndex) ??
+                      ""
+                  ),
+                ])
+              ),
+            }));
             const { error } = await supabase.from("rosters").insert([
               {
                 user_id: user.id,
@@ -405,7 +425,9 @@ export function RosterWorkspace({ isGuest, onReturnHome }: RosterWorkspaceProps)
                 members: members,
                 timing_data: timingData,
                 manual_roster_data: manualRosterData,
-          
+
+                final_roster_data: finalRosterData,
+        
                 updated_at: new Date().toISOString(),
               },
             ]);
