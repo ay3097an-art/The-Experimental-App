@@ -381,20 +381,32 @@ export function RosterWorkspace({ isGuest, onReturnHome }: RosterWorkspaceProps)
           const saveRosterToDatabase = async () => {
             if (isGuest || !user) return;
           
-            const firstDate =
-  selectedWeek
-    ? new Date(selectedWeek).toLocaleDateString("en-GB")
-    : new Date().toLocaleDateString("en-GB");
-
-    const title = `${rosterNumber || "1"}_${rosterPurpose || "Duty"}_${groupName || "Group"}_${placeOfDuty || "DutyPlace"}_${firstDate}`;
+            const firstDate = selectedWeek
+              ? new Date(selectedWeek).toLocaleDateString("en-GB")
+              : new Date().toLocaleDateString("en-GB");
           
-              console.log("USER:", user);
-              console.log("USER ID:", user?.id);
-              
-              const { error } = await supabase.from("rosters").insert([
+            const title = `${rosterNumber || "1"}_${rosterPurpose || "Duty"}_${groupName || "Group"}_${placeOfDuty || "DutyPlace"}_${firstDate}`;
+          
+            console.log("USER:", user);
+            console.log("USER ID:", user?.id);
+          
+            const { error } = await supabase.from("rosters").insert([
               {
                 user_id: user.id,
                 title: title,
+          
+                institution_name: institutionName,
+                roster_purpose: rosterPurpose,
+                group_name: groupName,
+                place_of_duty: placeOfDuty,
+                roster_number: rosterNumber || "1",
+                selected_week: selectedWeek || null,
+          
+                members: members,
+                timing_data: timingData,
+                manual_roster_data: manualRosterData,
+          
+                updated_at: new Date().toISOString(),
               },
             ]);
           
