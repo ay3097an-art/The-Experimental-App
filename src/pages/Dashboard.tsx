@@ -107,22 +107,40 @@ export function Dashboard({ onCreateRoster, onLogout }: DashboardProps) {
             <p>No rosters created yet.</p>
           ) : (
             <div className="space-y-3">
-  {rosters.map((roster, index) => (
-    <div
-      key={roster.id}
-      className="border rounded-xl p-4 flex justify-between items-center"
-    >
-      <div>
-        <p className="font-semibold">
-          {index + 1}. {roster.title}
-        </p>
+ {rosters.map((roster, index) => (
+  <div
+    key={roster.id}
+    className="border rounded-xl p-4 flex justify-between items-center"
+  >
+    <div>
+      <p className="font-semibold">
+        {index + 1}. {roster.title}
+      </p>
 
-        <p className="text-sm text-gray-500">
-          Created: {new Date(roster.created_at).toLocaleDateString("en-GB")}
-        </p>
-      </div>
+      <p className="text-sm text-gray-500">
+        Created: {new Date(roster.created_at).toLocaleDateString("en-GB")}
+      </p>
     </div>
-  ))}
+
+    <div className="flex gap-2 flex-wrap">
+      <button className="px-4 py-2 text-black border rounded-lg">
+        Open
+      </button>
+
+      <button className="px-4 py-2 text-black  border rounded-lg">
+        Edit
+      </button>
+
+      <button className="px-4 py-2 text-black border rounded-lg">
+        Download PDF
+      </button>
+
+      <button className="px-4 py-2 border rounded-lg text-red-600">
+        Delete
+      </button>
+    </div>
+  </div>
+))}
 </div>
 )}
         </div>
