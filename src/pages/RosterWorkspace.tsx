@@ -111,6 +111,9 @@ export function RosterWorkspace({
   const [manualEditMode, setManualEditMode] = useState(
     mode === "edit"
   );
+
+  const weekHeaders = getWeekDates();
+
   const [manualRosterData, setManualRosterData] = useState<Record<string, string>>(
     mode === "edit" && initialData?.final_roster_data
       ? Object.fromEntries(
@@ -228,7 +231,7 @@ export function RosterWorkspace({
     });
   };
 
-  const weekHeaders = getWeekDates();
+  
 
   const getAutoDuty = (rowIndex: number, dayIndex: number) => {
     const dayCodeMap = ["M", "T", "W", "TH", "F", "S", "SU"];
