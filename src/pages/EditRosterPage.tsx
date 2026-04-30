@@ -1,4 +1,6 @@
-import { Card, CardContent, Button } from "../components/UI";
+import { useState } from "react";
+import { supabase } from "../lib/supabase";
+import { Card, CardContent, Button, Input } from "../components/UI";
 
 interface EditRosterPageProps {
   roster: any;
@@ -14,6 +16,14 @@ export function EditRosterPage({ roster, onCancel }: EditRosterPageProps) {
     );
   }
 
+  const [institution, setInstitution] = useState(roster.institution_name || "");
+const [purpose, setPurpose] = useState(roster.roster_purpose || "");
+const [group, setGroup] = useState(roster.group_name || "");
+const [place, setPlace] = useState(roster.place_of_duty || "");
+const [rosterNo, setRosterNo] = useState(roster.roster_number || "");
+
+const [tableData, setTableData] = useState(roster.final_roster_data || []);
+
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-5xl mx-auto space-y-6">
@@ -25,18 +35,88 @@ export function EditRosterPage({ roster, onCancel }: EditRosterPageProps) {
             </h1>
 
             <p><strong>Title:</strong> {roster.title}</p>
-            <p><strong>Institution:</strong> {roster.institution_name}</p>
-            <p><strong>Purpose:</strong> {roster.roster_purpose}</p>
-            <p><strong>Group:</strong> {roster.group_name}</p>
-            <p><strong>Duty Place:</strong> {roster.place_of_duty}</p>
-            <p><strong>Roster No:</strong> {roster.roster_number}</p>
+            <Input value={institution} onChange={(e) => setInstitution(e.target.value)} placeholder="Institution" />
+<Input value={purpose} onChange={(e) => setPurpose(e.target.value)} placeholder="Purpose" />
+<Input value={group} onChange={(e) => setGroup(e.target.value)} placeholder="Group Name" />
+<Input value={place} onChange={(e) => setPlace(e.target.value)} placeholder="Place of Duty" />
+<Input value={rosterNo} onChange={(e) => setRosterNo(e.target.value)} placeholder="Roster Number" />
           </CardContent>
         </Card>
 
+        <Card>
+  <CardContent className="p-6">
+    <h2 className="text-xl font-semibold mb-4">Edit Roster Table</h2>
+
+    {tableData.length === 0 ? (
+      <p>No roster data found.</p>
+    ) : (
+      <div className="overflow-x-auto">
+        <table className="w-full border text-sm">
+          <thead>
+            <tr>
+              {Object.keys(tableData[0]).map((header) => (
+                <th key={header} className="border p-2 bg-gray-100">
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+
+          <tbody>
+            {tableData.map((row: any, rowIndex: number) => (
+              <tr key={rowIndex}>
+                {Object.keys(row).map((key) => (
+                  <td key={key} className="border p-2 text-center">
+                    <input
+                      value={row[key] || ""}
+                      onChange={(e) => {
+                        const updated = [...tableData];
+                        updated[rowIndex][key] = e.target.value.toUpperCase();
+                        setTableData(updated);
+                      }}
+                      className="w-full text-center"
+                    />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </CardContent>
+</Card>
+
         <div className="flex gap-4">
-          <Button className="bg-black text-white">
-            Confirm Edit
-          </Button>
+        <Button
+  className="bg-black text-white"
+  onClick={async () => {
+    const password = prompt("Enter your password to confirm edit:");
+    if (!password) return;
+
+    const { error } = await supabase
+      .from("rosters")
+      .update({
+        institution_name: institution,
+        roster_purpose: purpose,
+        group_name: group,
+        place_of_duty: place,
+        roster_number: rosterNo,
+        final_roster_data: tableData,
+      })
+      .eq("id", roster.id);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    alert("Roster updated successfully!");
+    onCancel();
+  }}
+>
+  Confirm Edit
+</Button>
 
           <Button variant="outline" onClick={onCancel}>
             Cancel
