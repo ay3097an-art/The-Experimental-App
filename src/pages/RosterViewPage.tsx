@@ -31,7 +31,7 @@ export function RosterViewPage({
     "Sunday",
   ];
   
-  const tableHeaders = (() => {
+  const tableHeaders: string[] = (() => {
     if (finalRosterData.length === 0) return [];
   
     const keys = Object.keys(finalRosterData[0]);
@@ -40,7 +40,7 @@ export function RosterViewPage({
       .map((day) =>
         keys.find((key) => key.startsWith(day))
       )
-      .filter(Boolean);
+      .filter((key): key is string => Boolean(key)); // 🔥 IMPORTANT FIX
   
     return ["sl", "name", ...dayHeaders];
   })();
@@ -90,8 +90,8 @@ export function RosterViewPage({
         autoTable(pdf, {
           head: [tableHeaders],
           body: finalRosterData.map((row: any) =>
-            tableHeaders.map((header) => row[header] || "")
-          ),
+  tableHeaders.map((header) => row[header as string] ?? "")
+),
           startY: 52,
           theme: "grid",
           styles: {
@@ -164,7 +164,7 @@ export function RosterViewPage({
                             key={header}
                             className="border p-2 text-center"
                           >
-                            {row[header]}
+                           {row[header as string] ?? ""}
                           </td>
                         ))}
                       </tr>
