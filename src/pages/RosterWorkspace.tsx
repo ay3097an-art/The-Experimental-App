@@ -115,12 +115,10 @@ export function RosterWorkspace({
     mode === "edit" && initialData?.final_roster_data
       ? Object.fromEntries(
           initialData.final_roster_data.flatMap((row: any, rowIndex: number) =>
-            Object.keys(row)
-              .filter((key) => key !== "sl" && key !== "name")
-              .map((day, dayIndex) => [
-                `${rowIndex}-${dayIndex}`,
-                row[day],
-              ])
+            weekHeaders.map((day, dayIndex) => [
+              `${rowIndex}-${dayIndex}`,
+              row[day] ?? "",
+            ])
           )
         )
       : {}
