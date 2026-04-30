@@ -21,9 +21,27 @@ export function RosterViewPage({
 
   const finalRosterData = roster.final_roster_data || [];
 
+  const correctDayOrder = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+  
   const tableHeaders =
     finalRosterData.length > 0
-      ? Object.keys(finalRosterData[0])
+      ? [
+          "sl",
+          "name",
+          ...correctDayOrder.map((day) =>
+            Object.keys(finalRosterData[0]).find((key) =>
+              key.startsWith(day)
+            )
+          ).filter(Boolean),
+        ]
       : [];
       const downloadSavedRosterPDF = () => {
         const pdf = new jsPDF({
