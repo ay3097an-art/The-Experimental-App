@@ -27,7 +27,8 @@ function AppContent() {
     user &&
     currentPage !== "dashboard" &&
     currentPage !== "workspace" &&
-    currentPage !== "view-roster"
+    currentPage !== "view-roster" &&
+    currentPage !== "edit-roster" // 🔥 ADD THIS LINE
   ) {
     setCurrentPage("dashboard");
   }
