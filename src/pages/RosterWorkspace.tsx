@@ -503,30 +503,54 @@ if (mode === "edit" && initialData?.id) {
       place_of_duty: placeOfDuty,
       roster_number: rosterNumber,
       selected_week: selectedWeek,
+
       members: members,
       timing_data: timingData,
       manual_roster_data: manualRosterData,
       final_roster_data: finalRosterData,
+
+      // ✅ NEW FIELDS
+      duty_type: dutyType,
+      day_off_type: dayOffType,
+      selected_day_offs: selectedDayOffs,
+
+      night_duty_days: nightDutyDays,
+      selected_night_days: selectedNightDays,
+      selected_night_members: selectedNightMembers,
+
       updated_at: new Date().toISOString(),
     })
     .eq("id", initialData.id);
 
   error = res.error;
+
 } else {
   const res = await supabase.from("rosters").insert([
     {
       user_id: user.id,
       title: title,
+
       institution_name: institutionName,
       roster_purpose: rosterPurpose,
       group_name: groupName,
       place_of_duty: placeOfDuty,
       roster_number: rosterNumber,
       selected_week: selectedWeek,
+
       members: members,
       timing_data: timingData,
       manual_roster_data: manualRosterData,
       final_roster_data: finalRosterData,
+
+      // ✅ NEW FIELDS
+      duty_type: dutyType,
+      day_off_type: dayOffType,
+      selected_day_offs: selectedDayOffs,
+
+      night_duty_days: nightDutyDays,
+      selected_night_days: selectedNightDays,
+      selected_night_members: selectedNightMembers,
+
       updated_at: new Date().toISOString(),
     },
   ]);
