@@ -341,14 +341,42 @@ export function RosterWorkspace({
   const orderedConfirmedTimings = shifts.filter((s) =>
     confirmedTimings.includes(s)
   );
-
+  const getFormattedDateTime = () => {
+    const now = new Date();
+  
+    return now.toLocaleString("en-IN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+  };
   const downloadRosterPDF = () => {
     const pdf = new jsPDF({
       orientation: "landscape",
       unit: "mm",
       format: "letter",
     });
-
+    const addWatermark = (pdf: jsPDF) => {
+      if (!user) return;
+    
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const username = user.user_metadata?.username || "User";
+      const email = user.email;
+    
+      const createdText = `Created by & at: ${username}, ${email}, ${getFormattedDateTime()}`;
+    
+      pdf.setFontSize(9);
+      pdf.text(createdText, 15, pageHeight - 10);
+    
+      if (mode === "edit") {
+        const editedText = `Edited by & at: ${username}, ${email}, ${getFormattedDateTime()}`;
+        pdf.text(editedText, 15, pageHeight - 5);
+      }
+    };
     const rosterRows = (members.length === 0
       ? [{ id: 1, name: "" }]
       : members.map((member, index) => ({
@@ -432,18 +460,25 @@ export function RosterWorkspace({
       ]),
       startY: 52,
       theme: "grid",
+    
       styles: {
         fontSize: 8,
         cellPadding: 2,
         halign: "center",
         valign: "middle",
       },
+    
       headStyles: {
         fontSize: 8,
       },
+    
       margin: {
         left: 8,
         right: 8,
+      },
+    
+      didDrawPage: () => {
+        addWatermark(pdf); // 🔥 THIS LINE FIXES YOUR PROBLEM
       },
     });
 
