@@ -24,6 +24,30 @@ const [rosterNo, setRosterNo] = useState(roster.roster_number || "");
 
 const [tableData, setTableData] = useState(roster.final_roster_data || []);
 
+const correctDayOrder = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
+const tableHeaders: string[] = (() => {
+  if (tableData.length === 0) return [];
+
+  const keys = Object.keys(tableData[0]);
+
+  const dayHeaders = correctDayOrder
+    .map((day) =>
+      keys.find((key) => key.startsWith(day))
+    )
+    .filter((key): key is string => Boolean(key));
+
+  return ["sl", "name", ...dayHeaders];
+})();
+
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-5xl mx-auto space-y-6">
@@ -58,21 +82,21 @@ const [tableData, setTableData] = useState(roster.final_roster_data || []);
         <table className="w-full border text-sm">
           <thead>
             <tr>
-              {Object.keys(tableData[0]).map((header) => (
-                <th key={header} className="border p-2 bg-gray-100">
-                  {header}
-                </th>
-              ))}
+            {tableHeaders.map((header) => (
+  <th key={header} className="border p-2 bg-gray-100">
+    {header === "sl" ? "Sl" : header === "name" ? "Name" : header}
+  </th>
+))}
             </tr>
           </thead>
 
           <tbody>
             {tableData.map((row: any, rowIndex: number) => (
               <tr key={rowIndex}>
-                {Object.keys(row).map((key) => (
+                {tableHeaders.map((key) => (
                   <td key={key} className="border p-2 text-center">
                     <input
-                      value={row[key] || ""}
+                      value={row[key as string] ?? ""}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         const updated = [...tableData];
                         updated[rowIndex][key] = e.target.value.toUpperCase();
