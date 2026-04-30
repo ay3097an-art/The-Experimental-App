@@ -14,26 +14,57 @@ interface Member {
 interface RosterWorkspaceProps {
   isGuest: boolean;
   onReturnHome: () => void;
+  mode?: "create" | "edit";
+  initialData?: any;
 }
 
-export function RosterWorkspace({ isGuest, onReturnHome }: RosterWorkspaceProps) {
+export function RosterWorkspace({
+  isGuest,
+  onReturnHome,
+  mode = "create",
+  initialData,
+}: RosterWorkspaceProps) 
+{
   const { user } = useAuth();
 
-  const [institutionName, setInstitutionName] = useState("");
-  const [rosterPurpose, setRosterPurpose] = useState("");
-  const [groupName, setGroupName] = useState("");
-  const [placeOfDuty, setPlaceOfDuty] = useState("");
-  const [rosterNumber, setRosterNumber] = useState("1");
+  const [institutionName, setInstitutionName] = useState(
+    initialData?.institution_name || ""
+  );
+  const [rosterPurpose, setRosterPurpose] = useState(
+    initialData?.roster_purpose || ""
+  );
+  
+  const [groupName, setGroupName] = useState(
+    initialData?.group_name || ""
+  );
+  
+  const [placeOfDuty, setPlaceOfDuty] = useState(
+    initialData?.place_of_duty || ""
+  );
+  
+  const [rosterNumber, setRosterNumber] = useState(
+    initialData?.roster_number || "1"
+  );
 
   const [name, setName] = useState("");
   const [role, setRole] = useState("Student");
-  const [members, setMembers] = useState<Member[]>([]);
+  const [members, setMembers] = useState<Member[]>(
+    mode === "edit" && initialData?.final_roster_data
+      ? initialData.final_roster_data.map((row: any, index: number) => ({
+          id: Date.now() + index,
+          name: row.name,
+          role: "Member",
+        }))
+      : []
+  );
 
   const [confirmedTimings, setConfirmedTimings] = useState<string[]>([]);
   const [selectedTimings, setSelectedTimings] = useState<string[]>([]);
   const [recentlyConfirmed, setRecentlyConfirmed] = useState<string[]>([]);
   const [editModeTimings, setEditModeTimings] = useState<string[]>([]);
-  const [selectedWeek, setSelectedWeek] = useState("");
+  const [selectedWeek, setSelectedWeek] = useState(
+    initialData?.selected_week || ""
+  );
   const [dayOffType, setDayOffType] = useState("");
   const [selectedDayOffs, setSelectedDayOffs] = useState<string[]>([]);
   const [dayOffConfirmed, setDayOffConfirmed] = useState(false);
@@ -44,8 +75,23 @@ export function RosterWorkspace({ isGuest, onReturnHome }: RosterWorkspaceProps)
   const [selectedNightMembers, setSelectedNightMembers] = useState<string[]>([]);
   const [dutyType, setDutyType] = useState("irregular");
   const [rosterConfirmed, setRosterConfirmed] = useState(false);
-  const [manualEditMode, setManualEditMode] = useState(false);
-  const [manualRosterData, setManualRosterData] = useState<Record<string, string>>({});
+  const [manualEditMode, setManualEditMode] = useState(
+    mode === "edit"
+  );
+  const [manualRosterData, setManualRosterData] = useState<Record<string, string>>(
+    mode === "edit" && initialData?.final_roster_data
+      ? Object.fromEntries(
+          initialData.final_roster_data.flatMap((row: any, rowIndex: number) =>
+            Object.keys(row)
+              .filter((key) => key !== "sl" && key !== "name")
+              .map((day, dayIndex) => [
+                `${rowIndex}-${dayIndex}`,
+                row[day],
+              ])
+          )
+        )
+      : {}
+  );
   const [draftManualRosterData, setDraftManualRosterData] = useState<Record<string, string>>({});
 
   const [timingData, setTimingData] = useState<Record<string, { from: string; to: string }>>({
@@ -410,35 +456,55 @@ export function RosterWorkspace({ isGuest, onReturnHome }: RosterWorkspaceProps)
                 ])
               ),
             }));
-            const { error } = await supabase.from("rosters").insert([
-              {
-                user_id: user.id,
-                title: title,
-          
-                institution_name: institutionName,
-                roster_purpose: rosterPurpose,
-                group_name: groupName,
-                place_of_duty: placeOfDuty,
-                roster_number: rosterNumber || "1",
-                selected_week: selectedWeek || null,
-          
-                members: members,
-                timing_data: timingData,
-                manual_roster_data: manualRosterData,
+            let error;
 
-                final_roster_data: finalRosterData,
-        
-                updated_at: new Date().toISOString(),
-              },
-            ]);
-          
+if (mode === "edit" && initialData?.id) {
+  const res = await supabase
+    .from("rosters")
+    .update({
+      institution_name: institutionName,
+      roster_purpose: rosterPurpose,
+      group_name: groupName,
+      place_of_duty: placeOfDuty,
+      roster_number: rosterNumber,
+      selected_week: selectedWeek,
+      members: members,
+      timing_data: timingData,
+      manual_roster_data: manualRosterData,
+      final_roster_data: finalRosterData,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", initialData.id);
+
+  error = res.error;
+} else {
+  const res = await supabase.from("rosters").insert([
+    {
+      user_id: user.id,
+      title: title,
+      institution_name: institutionName,
+      roster_purpose: rosterPurpose,
+      group_name: groupName,
+      place_of_duty: placeOfDuty,
+      roster_number: rosterNumber,
+      selected_week: selectedWeek,
+      members: members,
+      timing_data: timingData,
+      manual_roster_data: manualRosterData,
+      final_roster_data: finalRosterData,
+      updated_at: new Date().toISOString(),
+    },
+  ]);
+
+  error = res.error;
+}
             if (error) {
               console.log("SUPABASE ERROR:", error);
               alert(error.message);
               return;
             }
           
-            alert("Roster saved successfully!");
+            alert(mode === "edit" ? "Roster updated successfully!" : "Roster saved successfully!");
           };
           
           return (
@@ -902,7 +968,7 @@ export function RosterWorkspace({ isGuest, onReturnHome }: RosterWorkspaceProps)
     await saveRosterToDatabase();
   }}
 >
-  Confirm Roster
+{mode === "edit" ? "Update Roster" : "Confirm Roster"}
 </Button>
                 <Button
                   type="button"
