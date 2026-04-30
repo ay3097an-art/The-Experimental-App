@@ -441,15 +441,6 @@ export function RosterWorkspace({
       44
     );
 
-    // Add watermark for authenticated users
-    if (!isGuest && user) {
-      pdf.setFontSize(9);
-      pdf.text(
-        `Created by: ${user.email} | Date: ${new Date().toLocaleDateString()}`,
-        15,
-        pdf.internal.pageSize.getHeight() - 10
-      );
-    }
 
     autoTable(pdf, {
       head: [["Sl", "Name", ...weekHeaders]],
