@@ -58,22 +58,55 @@ export function RosterWorkspace({
       : []
   );
 
-  const [confirmedTimings, setConfirmedTimings] = useState<string[]>([]);
-  const [selectedTimings, setSelectedTimings] = useState<string[]>([]);
+  const [confirmedTimings, setConfirmedTimings] = useState<string[]>(
+    mode === "edit" && initialData?.timing_data
+      ? Object.keys(initialData.timing_data).filter(
+          (key) =>
+            initialData.timing_data[key]?.from &&
+            initialData.timing_data[key]?.to
+        )
+      : []
+  );
+  const [selectedTimings, setSelectedTimings] = useState<string[]>(
+    mode === "edit" && initialData?.timing_data
+      ? Object.keys(initialData.timing_data)
+      : []
+  );
   const [recentlyConfirmed, setRecentlyConfirmed] = useState<string[]>([]);
   const [editModeTimings, setEditModeTimings] = useState<string[]>([]);
   const [selectedWeek, setSelectedWeek] = useState(
     initialData?.selected_week || ""
   );
-  const [dayOffType, setDayOffType] = useState("");
-  const [selectedDayOffs, setSelectedDayOffs] = useState<string[]>([]);
-  const [dayOffConfirmed, setDayOffConfirmed] = useState(false);
+  const [dayOffType, setDayOffType] = useState(
+    initialData?.day_off_type || ""
+  );
+  
+  const [selectedDayOffs, setSelectedDayOffs] = useState<string[]>(
+    initialData?.selected_day_offs || []
+  );
+  
+  const [dayOffConfirmed, setDayOffConfirmed] = useState(
+    mode === "edit" && initialData?.day_off_type ? true : false
+  );
   const [draggedMemberId, setDraggedMemberId] = useState<number | null>(null);
-  const [nightDutyDays, setNightDutyDays] = useState("");
-  const [selectedNightDays, setSelectedNightDays] = useState<string[]>([]);
-  const [nightDutyConfirmed, setNightDutyConfirmed] = useState(false);
-  const [selectedNightMembers, setSelectedNightMembers] = useState<string[]>([]);
-  const [dutyType, setDutyType] = useState("irregular");
+  const [nightDutyDays, setNightDutyDays] = useState(
+    initialData?.night_duty_days || ""
+  );
+  
+  const [selectedNightDays, setSelectedNightDays] = useState<string[]>(
+    initialData?.selected_night_days || []
+  );
+  
+  const [selectedNightMembers, setSelectedNightMembers] = useState<string[]>(
+    initialData?.selected_night_members || []
+  );
+  
+  const [nightDutyConfirmed, setNightDutyConfirmed] = useState(
+    mode === "edit" && initialData?.night_duty_days ? true : false
+  );
+  const [dutyType, setDutyType] = useState(
+    initialData?.duty_type || "irregular"
+  );
   const [rosterConfirmed, setRosterConfirmed] = useState(false);
   const [manualEditMode, setManualEditMode] = useState(
     mode === "edit"
@@ -94,11 +127,13 @@ export function RosterWorkspace({
   );
   const [draftManualRosterData, setDraftManualRosterData] = useState<Record<string, string>>({});
 
-  const [timingData, setTimingData] = useState<Record<string, { from: string; to: string }>>({
-    Morning: { from: "", to: "" },
-    Evening: { from: "", to: "" },
-    Night: { from: "", to: "" },
-  });
+  const [timingData, setTimingData] = useState<Record<string, { from: string; to: string }>>(
+    initialData?.timing_data || {
+      Morning: { from: "", to: "" },
+      Evening: { from: "", to: "" },
+      Night: { from: "", to: "" },
+    }
+  );
 
   const shifts = ["Morning", "Evening", "Night"];
 
