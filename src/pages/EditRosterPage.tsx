@@ -35,11 +35,15 @@ const [tableData, setTableData] = useState(roster.final_roster_data || []);
             </h1>
 
             <p><strong>Title:</strong> {roster.title}</p>
-            <Input value={institution} onChange={(e) => setInstitution(e.target.value)} placeholder="Institution" />
-<Input value={purpose} onChange={(e) => setPurpose(e.target.value)} placeholder="Purpose" />
-<Input value={group} onChange={(e) => setGroup(e.target.value)} placeholder="Group Name" />
-<Input value={place} onChange={(e) => setPlace(e.target.value)} placeholder="Place of Duty" />
-<Input value={rosterNo} onChange={(e) => setRosterNo(e.target.value)} placeholder="Roster Number" />
+            <Input value={institution} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInstitution(e.target.value)} />
+
+<Input value={purpose} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPurpose(e.target.value)} />
+
+<Input value={group} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGroup(e.target.value)} />
+
+<Input value={place} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPlace(e.target.value)} />
+
+<Input value={rosterNo} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRosterNo(e.target.value)} />
           </CardContent>
         </Card>
 
@@ -69,7 +73,7 @@ const [tableData, setTableData] = useState(roster.final_roster_data || []);
                   <td key={key} className="border p-2 text-center">
                     <input
                       value={row[key] || ""}
-                      onChange={(e) => {
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         const updated = [...tableData];
                         updated[rowIndex][key] = e.target.value.toUpperCase();
                         setTableData(updated);
