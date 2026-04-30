@@ -1089,7 +1089,12 @@ if (mode === "edit" && initialData?.id) {
                     <td key={d} className="border p-2 text-center">
                       {manualEditMode ? (
                         <Input
-                          value={draftManualRosterData[`0-${di}`] ?? manualRosterData[`0-${di}`] ?? getAutoDuty(0, di) ?? ""}
+                        value={
+                          draftManualRosterData[`0-${di}`] ??
+                          manualRosterData[`0-${di}`] ??
+                          (mode === "edit" ? "" : getAutoDuty(0, di)) ??
+                          ""
+                        }
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setDraftManualRosterData((prev) => ({
                               ...prev,
@@ -1099,7 +1104,9 @@ if (mode === "edit" && initialData?.id) {
                           className="text-center"
                         />
                       ) : (
-                        manualRosterData[`0-${di}`] ?? getAutoDuty(0, di) ?? ""
+                        mode === "edit"
+  ? manualRosterData[`0-${di}`] ?? ""
+  : manualRosterData[`0-${di}`] ?? getAutoDuty(0, di)
                       )}
                     </td>
                   ))}
@@ -1113,7 +1120,12 @@ if (mode === "edit" && initialData?.id) {
                       <td key={d} className="border p-2 text-center">
                         {manualEditMode ? (
                           <Input
-                            value={draftManualRosterData[`${i}-${di}`] ?? manualRosterData[`${i}-${di}`] ?? getAutoDuty(i, di) ?? ""}
+                          value={
+                            draftManualRosterData[`${i}-${di}`] ??
+                            manualRosterData[`${i}-${di}`] ??
+                            (mode === "edit" ? "" : getAutoDuty(i, di)) ??
+                            ""
+                          }
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                               setDraftManualRosterData((prev) => ({
                                 ...prev,
@@ -1123,7 +1135,9 @@ if (mode === "edit" && initialData?.id) {
                             className="text-center"
                           />
                         ) : (
-                          manualRosterData[`${i}-${di}`] ?? getAutoDuty(i, di)
+                          mode === "edit"
+  ? manualRosterData[`${i}-${di}`] ?? ""
+  : manualRosterData[`${i}-${di}`] ?? getAutoDuty(i, di)
                         )}
                       </td>
                     ))}
