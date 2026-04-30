@@ -1,3 +1,4 @@
+import { useAuth } from "../context/AuthContext";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Card, CardContent, Button } from "../components/UI";
@@ -20,6 +21,7 @@ export function RosterViewPage({
   }
 
   const finalRosterData = roster.final_roster_data || [];
+  const { user } = useAuth();
 
   const correctDayOrder = [
     "Monday",
@@ -86,6 +88,14 @@ export function RosterViewPage({
           15,
           44
         );
+        if (user) {
+          pdf.setFontSize(9);
+          pdf.text(
+            `Created by: ${user.email} | Date: ${new Date(roster.created_at).toLocaleDateString("en-GB")}`,
+            15,
+            pdf.internal.pageSize.getHeight() - 10
+          );
+        }
       
         autoTable(pdf, {
           head: [tableHeaders],
