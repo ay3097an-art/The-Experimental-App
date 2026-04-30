@@ -145,14 +145,21 @@ export function RosterViewPage({
                 <table className="w-full border text-sm">
                   <thead>
                     <tr>
-                      {tableHeaders.map((header) => (
-                        <th
-                          key={header}
-                          className="border p-2 bg-gray-100"
-                        >
-                          {header}
-                        </th>
-                      ))}
+                    {tableHeaders.map((header) => {
+  let label = header;
+
+  if (header === "sl") label = "Sl";
+  else if (header === "name") label = "Name";
+
+  return (
+    <th
+      key={header}
+      className="border p-2 bg-gray-100"
+    >
+      {label}
+    </th>
+  );
+})}
                     </tr>
                   </thead>
 
