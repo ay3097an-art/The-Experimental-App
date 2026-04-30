@@ -1,5 +1,4 @@
 import { RosterViewPage } from "./pages/RosterViewPage";
-import { EditRosterPage } from "./pages/EditRosterPage";
 import { useState } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { LandingPage } from "./pages/LandingPage";
@@ -97,9 +96,11 @@ function AppContent() {
   }
   if (currentPage === "edit-roster") {
     return (
-      <EditRosterPage
-        roster={selectedRoster}
-        onCancel={() => {
+      <RosterWorkspace
+        isGuest={false}
+        mode="edit"
+        initialData={selectedRoster}
+        onReturnHome={() => {
           setCurrentPage("dashboard");
           setSelectedRoster(null);
         }}
