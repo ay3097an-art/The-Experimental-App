@@ -13,6 +13,7 @@ interface DashboardProps {
   onCreateRoster: () => void;
   onLogout: () => void;
   onOpenRoster: (roster: any) => void;
+  onEditRoster: (roster: any) => void;
 }
 
 interface Roster {
@@ -25,7 +26,10 @@ export function Dashboard({
   onCreateRoster,
   onLogout,
   onOpenRoster,
-}: DashboardProps) {
+  onEditRoster,
+}: DashboardProps)
+
+{
   const { user, signOut } = useAuth();
   const [rosters, setRosters] = useState<Roster[]>([]);
   const [profile, setProfile] = useState<any>(null);
@@ -133,9 +137,12 @@ export function Dashboard({
         Open
       </button>
 
-      <button className="px-4 py-2 text-black  border rounded-lg">
-        Edit
-      </button>
+      <button
+  onClick={() => onEditRoster(roster)}
+  className="px-4 py-2 text-black border rounded-lg"
+>
+  Edit
+</button>
 
       <button className="px-4 py-2 text-black border rounded-lg">
         Download PDF

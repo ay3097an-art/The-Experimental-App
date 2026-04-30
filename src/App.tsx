@@ -1,4 +1,5 @@
 import { RosterViewPage } from "./pages/RosterViewPage";
+import { EditRosterPage } from "./pages/EditRosterPage";
 import { useState } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { LandingPage } from "./pages/LandingPage";
@@ -75,6 +76,10 @@ function AppContent() {
     setSelectedRoster(roster);
     setCurrentPage("view-roster");
   }}
+  onEditRoster={(roster) => {
+    setSelectedRoster(roster);
+    setCurrentPage("edit-roster");
+  }}
 />
     );
   }
@@ -83,6 +88,17 @@ function AppContent() {
       <RosterViewPage
         roster={selectedRoster}
         onReturnDashboard={() => {
+          setCurrentPage("dashboard");
+          setSelectedRoster(null);
+        }}
+      />
+    );
+  }
+  if (currentPage === "edit-roster") {
+    return (
+      <EditRosterPage
+        roster={selectedRoster}
+        onCancel={() => {
           setCurrentPage("dashboard");
           setSelectedRoster(null);
         }}
