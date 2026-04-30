@@ -49,7 +49,7 @@ const [tableData, setTableData] = useState(roster.final_roster_data || []);
 
         <Card>
   <CardContent className="p-6">
-    <h2 className="text-xl font-semibold mb-4">Edit Roster Table</h2>
+    <h2 className="text-xl font-bold text-black mb-4">Edit Roster Table</h2>
 
     {tableData.length === 0 ? (
       <p>No roster data found.</p>
