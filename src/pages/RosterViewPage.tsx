@@ -31,18 +31,19 @@ export function RosterViewPage({
     "Sunday",
   ];
   
-  const tableHeaders =
-    finalRosterData.length > 0
-      ? [
-          "sl",
-          "name",
-          ...correctDayOrder.map((day) =>
-            Object.keys(finalRosterData[0]).find((key) =>
-              key.startsWith(day)
-            )
-          ).filter(Boolean),
-        ]
-      : [];
+  const tableHeaders = (() => {
+    if (finalRosterData.length === 0) return [];
+  
+    const keys = Object.keys(finalRosterData[0]);
+  
+    const dayHeaders = correctDayOrder
+      .map((day) =>
+        keys.find((key) => key.startsWith(day))
+      )
+      .filter(Boolean);
+  
+    return ["sl", "name", ...dayHeaders];
+  })();
       const downloadSavedRosterPDF = () => {
         const pdf = new jsPDF({
           orientation: "landscape",
