@@ -112,6 +112,32 @@ export function RosterWorkspace({
     mode === "edit"
   );
 
+  const getWeekDates = () => {
+    const days = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
+
+    if (!selectedWeek) return days;
+
+    const start = new Date(selectedWeek);
+    return days.map((day, index) => {
+      const current = new Date(start);
+      current.setDate(start.getDate() + index);
+      const formatted = current.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+      });
+      return `${day} (${formatted})`;
+    });
+  };
+  
   const weekHeaders = getWeekDates();
 
   const [manualRosterData, setManualRosterData] = useState<Record<string, string>>(
@@ -205,31 +231,7 @@ export function RosterWorkspace({
     }));
   };
 
-  const getWeekDates = () => {
-    const days = [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ];
-
-    if (!selectedWeek) return days;
-
-    const start = new Date(selectedWeek);
-    return days.map((day, index) => {
-      const current = new Date(start);
-      current.setDate(start.getDate() + index);
-      const formatted = current.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "2-digit",
-      });
-      return `${day} (${formatted})`;
-    });
-  };
+  
 
   
 
