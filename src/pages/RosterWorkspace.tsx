@@ -500,6 +500,11 @@ export function RosterWorkspace({
             console.log("USER:", user);
             console.log("USER ID:", user?.id);
           
+            const effectiveRosterData =
+  Object.keys(draftManualRosterData).length > 0
+    ? { ...manualRosterData, ...draftManualRosterData }
+    : manualRosterData;
+            
             const finalRosterData = (members.length === 0
               ? [{ id: 1, name: "" }]
               : members.map((member, index) => ({
@@ -513,9 +518,9 @@ export function RosterWorkspace({
                 weekHeaders.map((day, dayIndex) => [
                   day,
                   String(
-                    manualRosterData[`${rowIndex}-${dayIndex}`] ??
-                      getAutoDuty(rowIndex, dayIndex) ??
-                      ""
+                    effectiveRosterData[`${rowIndex}-${dayIndex}`] ??
+                    getAutoDuty(rowIndex, dayIndex) ??
+                    ""
                   ),
                 ])
               ),
@@ -523,35 +528,73 @@ export function RosterWorkspace({
             let error;
 
             if (mode === "edit" && initialData?.id) {
-              console.log("===== EDIT DEBUG =====");
-              console.log("ID:", initialData.id);
-              console.log("USER:", user?.id);
-            
               const res = await supabase
                 .from("rosters")
                 .update({
-                  roster_number: rosterNumber, // simple test field
+                  institution_name: institutionName,
+                  roster_purpose: rosterPurpose,
+                  group_name: groupName,
+                  place_of_duty: placeOfDuty,
+                  roster_number: rosterNumber,
+                  selected_week: selectedWeek,
+            
+                  members: members,
+                  timing_data: timingData,
+                  manual_roster_data: effectiveRosterData,
+                  final_roster_data: finalRosterData,
+            
+                  duty_type: dutyType,
+                  day_off_type: dayOffType,
+                  selected_day_offs: selectedDayOffs,
+            
+                  night_duty_days: nightDutyDays,
+                  selected_night_days: selectedNightDays,
+                  selected_night_members: selectedNightMembers,
+            
+                  updated_at: new Date().toISOString(),
                 })
-                .eq("id", initialData.id)
-                .select();
+                .eq("id", initialData.id);
             
-              console.log("UPDATE RESULT:", res);
+              error = res.error;
+            } else {
+              const res = await supabase.from("rosters").insert([
+                {
+                  user_id: user.id,
+                  title: title,
             
-              if (res.error) {
-                console.log("ERROR:", res.error);
-                alert(res.error.message);
-              } else {
-                console.log("SUCCESS:", res.data);
-              }
+                  institution_name: institutionName,
+                  roster_purpose: rosterPurpose,
+                  group_name: groupName,
+                  place_of_duty: placeOfDuty,
+                  roster_number: rosterNumber,
+                  selected_week: selectedWeek,
             
-              return; // 🔥 VERY IMPORTANT (stops rest of function)
+                  members: members,
+                  timing_data: timingData,
+                  manual_roster_data: effectiveRosterData,
+                  final_roster_data: finalRosterData,
+            
+                  duty_type: dutyType,
+                  day_off_type: dayOffType,
+                  selected_day_offs: selectedDayOffs,
+            
+                  night_duty_days: nightDutyDays,
+                  selected_night_days: selectedNightDays,
+                  selected_night_members: selectedNightMembers,
+            
+                  updated_at: new Date().toISOString(),
+                },
+              ]);
+            
+              error = res.error;
             }
+          
             if (error) {
               console.log("SUPABASE ERROR:", error);
               alert(error.message);
               return;
             }
-          
+           
             alert(mode === "edit" ? "Roster updated successfully!" : "Roster saved successfully!");
           };
           
