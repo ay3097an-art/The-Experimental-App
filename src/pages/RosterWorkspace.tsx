@@ -1129,7 +1129,7 @@ export function RosterWorkspace({
                           value={
                             draftManualRosterData[`${i}-${di}`] ??
                             manualRosterData[`${i}-${di}`] ??
-                            (mode === "edit" ? "" : getAutoDuty(i, di)) ??
+                            getAutoDuty(i, di) ??
                             ""
                           }
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -1140,11 +1140,9 @@ export function RosterWorkspace({
                             }
                             className="text-center"
                           />
-                        ) : (
-                          mode === "edit"
-  ? manualRosterData[`${i}-${di}`] ?? ""
-  : manualRosterData[`${i}-${di}`] ?? getAutoDuty(i, di)
-                        )}
+                        ) : manualRosterData[`${i}-${di}`] ??
+                        getAutoDuty(i, di) ??
+                        ""}
                       </td>
                     ))}
                   </tr>
