@@ -1065,7 +1065,7 @@ export function RosterWorkspace({
                   type="button"
                   variant="outline"
                   onClick={() => {
-                    setDraftManualRosterData(manualRosterData);
+                    setDraftManualRosterData({}); // 🔥 EMPTY instead of copying old
                     setManualEditMode(true);
                     setRosterConfirmed(false);
                   }}
@@ -1097,9 +1097,13 @@ export function RosterWorkspace({
                         <Input
                         value={
                           draftManualRosterData[`0-${di}`] ??
-                          manualRosterData[`0-${di}`] ??
-                          (mode === "edit" ? "" : getAutoDuty(0, di)) ??
-                          ""
+(
+  manualRosterData[`0-${di}`] === "" ||
+  manualRosterData[`0-${di}`] == null
+    ? getAutoDuty(0, di)
+    : manualRosterData[`0-${di}`]
+) ??
+""
                         }
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setDraftManualRosterData((prev) => ({
@@ -1128,8 +1132,12 @@ export function RosterWorkspace({
                           <Input
                           value={
                             draftManualRosterData[`${i}-${di}`] ??
-                            manualRosterData[`${i}-${di}`] ??
-                            getAutoDuty(i, di) ??
+                            (
+                              manualRosterData[`${i}-${di}`] === "" ||
+                              manualRosterData[`${i}-${di}`] == null
+                                ? getAutoDuty(i, di)
+                                : manualRosterData[`${i}-${di}`]
+                            ) ??
                             ""
                           }
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
