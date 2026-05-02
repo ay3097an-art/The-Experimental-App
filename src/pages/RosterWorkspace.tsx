@@ -375,13 +375,34 @@ export function RosterWorkspace({
       const username = user.user_metadata?.username || "User";
       const email = user.email;
     
-      const createdText = `Created by & at: ${username}, ${email}, ${getFormattedDateTime()}`;
+      const createdAt = initialData?.created_at;
+      const updatedAt = initialData?.updated_at;
     
-      pdf.setFontSize(9);
-      pdf.text(createdText, 15, pageHeight - 10);
+      const formatDateTime = (value: string) => {
+        if (!value) return "";
     
-      if (mode === "edit") {
-        const editedText = `Edited by & at: ${username}, ${email}, ${getFormattedDateTime()}`;
+        const d = new Date(value);
+        return d.toLocaleString("en-IN", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        });
+      };
+    
+      // ✅ Created watermark
+      if (createdAt) {
+        const createdText = `Created by & at: ${username}, ${email}, ${formatDateTime(createdAt)}`;
+        pdf.setFontSize(9);
+        pdf.text(createdText, 15, pageHeight - 10);
+      }
+    
+      // ✅ Edited watermark
+      if (updatedAt) {
+        const editedText = `Edited by & at: ${username}, ${email}, ${formatDateTime(updatedAt)}`;
         pdf.text(editedText, 15, pageHeight - 5);
       }
     };
