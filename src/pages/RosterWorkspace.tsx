@@ -108,9 +108,7 @@ export function RosterWorkspace({
     initialData?.duty_type || "irregular"
   );
   const [rosterConfirmed, setRosterConfirmed] = useState(false);
-  const [manualEditMode, setManualEditMode] = useState(
-    mode === "edit"
-  );
+  const [manualEditMode, setManualEditMode] = useState(false);
 
   const getWeekDates = () => {
     const days = [
