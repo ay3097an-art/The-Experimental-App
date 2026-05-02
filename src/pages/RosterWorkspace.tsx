@@ -486,6 +486,11 @@ export function RosterWorkspace({
               `${s} ${timingData[s].from || "--:--"} - ${timingData[s].to || "--:--"}`
           )
           .join(", ");
+
+          const effectiveRosterData = manualEditMode
+          ? { ...manualRosterData, ...draftManualRosterData }
+          : {};
+
           const saveRosterToDatabase = async () => {
             if (isGuest || !user) return;
           
@@ -1036,7 +1041,7 @@ export function RosterWorkspace({
                   type="button"
                   variant="outline"
                   onClick={() => {
-                    setDraftManualRosterData(manualRosterData);
+                    setDraftManualRosterData({});
                     setManualEditMode(false);
                   }}
                 >
@@ -1149,10 +1154,9 @@ export function RosterWorkspace({
                             }
                             className="text-center"
                           />
-                        ) : manualRosterData[`${i}-${di}`] !== undefined &&
-                        manualRosterData[`${i}-${di}`] !== ""
-                          ? manualRosterData[`${i}-${di}`]
-                          : getAutoDuty(i, di) ??
+                        ) : manualEditMode
+                        ? (effectiveRosterData[`${i}-${di}`] ?? getAutoDuty(i, di))
+                        : getAutoDuty(i, di) ??
                         ""}
                       </td>
                     ))}
