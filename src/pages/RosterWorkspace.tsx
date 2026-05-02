@@ -574,6 +574,7 @@ export function RosterWorkspace({
                   selected_night_days: selectedNightDays,
                   selected_night_members: selectedNightMembers,
             
+                  created_at: createdAtLocal,
                   updated_at: new Date().toISOString(),
                 })
                 .eq("id", initialData.id);
