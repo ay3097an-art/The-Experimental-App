@@ -349,19 +349,7 @@ export function RosterWorkspace({
   const orderedConfirmedTimings = shifts.filter((s) =>
     confirmedTimings.includes(s)
   );
-  const getFormattedDateTime = () => {
-    const now = new Date();
   
-    return now.toLocaleString("en-IN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    });
-  };
   const downloadRosterPDF = () => {
     const pdf = new jsPDF({
       orientation: "landscape",
