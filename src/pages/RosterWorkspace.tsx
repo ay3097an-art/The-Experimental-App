@@ -25,6 +25,10 @@ export function RosterWorkspace({
   initialData,
 }: RosterWorkspaceProps) 
 {
+  const [createdAtLocal] = useState(
+    initialData?.created_at || new Date().toISOString()
+  );
+  
   const { user } = useAuth();
 
   const [institutionName, setInstitutionName] = useState(
@@ -363,7 +367,7 @@ export function RosterWorkspace({
       const username = user.user_metadata?.username || "User";
       const email = user.email;
     
-      const createdAt = initialData?.created_at;
+      const createdAt = createdAtLocal;
       const updatedAt = initialData?.updated_at;
     
       const formatDateTime = (value: string) => {
