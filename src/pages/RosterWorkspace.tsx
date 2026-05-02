@@ -367,7 +367,8 @@ export function RosterWorkspace({
       const username = user.user_metadata?.username || "User";
       const email = user.email;
     
-      const createdAt = createdAtLocal;
+      const createdAt =
+  initialData?.created_at ?? createdAtLocal;
       const updatedAt = initialData?.updated_at;
     
       const formatDateTime = (value: string) => {
