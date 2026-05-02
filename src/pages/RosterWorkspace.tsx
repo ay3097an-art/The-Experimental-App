@@ -1023,7 +1023,10 @@ export function RosterWorkspace({
                 <Button
                   type="button"
                   onClick={() => {
-                    setManualRosterData(draftManualRosterData);
+                    setManualRosterData((prev) => ({
+                      ...prev,
+                      ...draftManualRosterData,
+                    }));
                     setManualEditMode(false);
                   }}
                 >
@@ -1146,8 +1149,10 @@ export function RosterWorkspace({
                             }
                             className="text-center"
                           />
-                        ) : manualRosterData[`${i}-${di}`] ??
-                        getAutoDuty(i, di) ??
+                        ) : manualRosterData[`${i}-${di}`] !== undefined &&
+                        manualRosterData[`${i}-${di}`] !== ""
+                          ? manualRosterData[`${i}-${di}`]
+                          : getAutoDuty(i, di) ??
                         ""}
                       </td>
                     ))}
