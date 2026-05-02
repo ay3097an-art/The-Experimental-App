@@ -276,52 +276,44 @@ export function RosterWorkspace({
       if (dayOffType === "all-sunday" && currentDayCode === "SU") {
         return "W/O";
       }
-
-      if (dayOffConfirmed && dayOffType === "customize" && selectedDayOffs.length > 0) {
+    
+      if (dayOffType === "customize" && selectedDayOffs.length > 0) {
         const totalMembers = members.length || 1;
-      
+    
         const hasSunday = selectedDayOffs.includes("SU");
         const otherDays = selectedDayOffs.filter((d) => d !== "SU");
-      
-        // 👉 Create stable shuffled index (IMPORTANT)
+    
         const seed = totalMembers + selectedDayOffs.join("").length;
-      
+    
         const shuffledIndex =
           (rowIndex * 7 + seed * 13) % totalMembers;
-      
+    
         // 👉 CASE 1: Only Sunday
         if (selectedDayOffs.length === 1 && hasSunday) {
           if (currentDayCode === "SU") return "W/O";
-          return "";
         }
-      
-        // 👉 CASE 2: No Sunday → random but balanced
-        if (!hasSunday) {
+    
+        // 👉 CASE 2: No Sunday
+        else if (!hasSunday) {
           const assignedDay =
             selectedDayOffs[shuffledIndex % selectedDayOffs.length];
-      
+    
           if (currentDayCode === assignedDay) return "W/O";
-          return "";
         }
-      
+    
         // 👉 CASE 3: Sunday + others
-        const half = Math.ceil(totalMembers / 2);
-      
-        // First half → Sunday (but shuffled)
-        if (shuffledIndex < half) {
-          if (currentDayCode === "SU") return "W/O";
-          return "";
+        else {
+          const half = Math.ceil(totalMembers / 2);
+    
+          if (shuffledIndex < half) {
+            if (currentDayCode === "SU") return "W/O";
+          } else if (otherDays.length > 0) {
+            const assignedDay =
+              otherDays[(shuffledIndex - half) % otherDays.length];
+    
+            if (currentDayCode === assignedDay) return "W/O";
+          }
         }
-      
-        // Remaining → random among other days
-        if (otherDays.length > 0) {
-          const assignedDay =
-            otherDays[(shuffledIndex - half) % otherDays.length];
-      
-          if (currentDayCode === assignedDay) return "W/O";
-        }
-      
-        return "";
       }
     }
     const duties = [];
